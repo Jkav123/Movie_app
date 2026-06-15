@@ -17,3 +17,10 @@ export interface OMDbMovie {
   imdbRating: string;
   Response: string;
 }
+
+export interface OMDbSearchResult {
+  imdbID: string;
+  Title: string;
+  Year: string;
+  Poster: string;
+}

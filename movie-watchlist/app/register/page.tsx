@@ -30,20 +30,28 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="">
-      <div className="">
-        <h1 className="">Create account 🎬</h1>
-        <p className="">Start tracking your movies</p>
+    <div className="flex min-h-screen items-center justify-center bg-gray-950 px-4">
+      <div className="w-full max-w-sm rounded-2xl border border-gray-800 bg-gray-900 p-8">
+        <h1 className="mb-1 text-2xl font-bold text-white">
+          Create account 🎬
+        </h1>
+        <p className="mb-6 text-sm text-gray-400">Start tracking your movies</p>
 
-        {error && <p className="">{error}</p>}
+        {error && (
+          <p className="mb-4 rounded-lg bg-red-900/40 px-4 py-2 text-sm text-red-400">
+            {error}
+          </p>
+        )}
 
-        <form onSubmit={handleSubmit} className="">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
             required
             placeholder="Your name"
             value={form.name}
             onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-            className=""
+            className="w-full rounded-xl border border-gray-700 bg-gray-800 px-4 py-2.5
+                       text-sm text-white placeholder-gray-500
+                       focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
           <input
             type="email"
@@ -51,7 +59,9 @@ export default function RegisterPage() {
             placeholder="Email"
             value={form.email}
             onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-            className=""
+            className="w-full rounded-xl border border-gray-700 bg-gray-800 px-4 py-2.5
+                       text-sm text-white placeholder-gray-500
+                       focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
           <input
             type="password"
@@ -61,16 +71,23 @@ export default function RegisterPage() {
             onChange={(e) =>
               setForm((f) => ({ ...f, password: e.target.value }))
             }
-            className=""
+            className="w-full rounded-xl border border-gray-700 bg-gray-800 px-4 py-2.5
+                       text-sm text-white placeholder-gray-500
+                       focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
-          <button type="submit" disabled={loading} className="">
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full rounded-xl bg-indigo-600 py-2.5 text-sm font-semibold
+                       text-white hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+          >
             {loading ? "Creating account..." : "Register"}
           </button>
         </form>
 
-        <p className="">
+        <p className="mt-4 text-center text-sm text-gray-500">
           Already have an account?{" "}
-          <Link href="/login" className="">
+          <Link href="/login" className="text-indigo-400 hover:underline">
             Sign in
           </Link>
         </p>

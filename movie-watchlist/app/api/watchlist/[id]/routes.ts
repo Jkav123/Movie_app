@@ -4,22 +4,23 @@ import { authOptions } from "@/lib/auth";
 import pool from "@/lib/db";
 import { UpdateWatchlistInput } from "@/lib/types";
 
-type Params = { params: Promise<{ id: string }> };
+type Params = { params: { id: string } };
 
 export async function PUT(req: Request, { params }: Params) {
-  const { id } = await params;
   const session = await getServerSession(authOptions);
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
   }
 
   const { rating, status }: UpdateWatchlistInput = await req.json();
+
   const [result]: any = await pool.query(
     `UPDATE watchlist
      SET rating = COALESCE(?, rating),
+         note   = COALESCE(?, note),
          status = COALESCE(?, status)
      WHERE id = ? AND user_id = ?`,
-    [rating, status, id, (session.user as any).id], // ← id not params.id
+    [rating, status, params.id, (session.user as any).id],
   );
 
   if (result.affectedRows === 0) {
@@ -27,13 +28,12 @@ export async function PUT(req: Request, { params }: Params) {
   }
 
   const [rows]: any = await pool.query("SELECT * FROM watchlist WHERE id = ?", [
-    id,
+    params.id,
   ]);
   return NextResponse.json(rows[0]);
 }
 
 export async function DELETE(_: Request, { params }: Params) {
-  const { id } = await params;
   const session = await getServerSession(authOptions);
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
@@ -41,7 +41,7 @@ export async function DELETE(_: Request, { params }: Params) {
 
   const [result]: any = await pool.query(
     "DELETE FROM watchlist WHERE id = ? AND user_id = ?",
-    [id, (session.user as any).id],
+    [params.id, (session.user as any).id],
   );
 
   if (result.affectedRows === 0) {

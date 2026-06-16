@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { OMDbMovie, WatchlistEntry, UpdateWatchlistInput } from "@/lib/types";
 import StarRating from "@/app/Components/StarRating";
 import Link from "next/link";
+import CommentSection from "@/app/Components/CommentSection";
 
 export default function MoviePage() {
   const { imdbId } = useParams<{ imdbId: string }>();
@@ -13,7 +14,6 @@ export default function MoviePage() {
   const [movie, setMovie] = useState<OMDbMovie | null>(null);
   const [entry, setEntry] = useState<WatchlistEntry | null>(null);
   const [note, setNote] = useState("");
-  const [editingNote, setEditingNote] = useState(false);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -34,7 +34,6 @@ export default function MoviePage() {
         const found = data.find((e) => e.imdb_id === imdbId);
         if (found) {
           setEntry(found);
-          setNote(found.note ?? "");
         }
       });
   }, [imdbId, status]);
@@ -76,7 +75,6 @@ export default function MoviePage() {
     if (res.ok) {
       const updated: WatchlistEntry = await res.json();
       setEntry(updated);
-      setNote(updated.note ?? "");
     }
   };
 
@@ -232,63 +230,6 @@ export default function MoviePage() {
                 <p className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-500">
                   My Note
                 </p>
-                {editingNote ? (
-                  <div className="space-y-2">
-                    <textarea
-                      rows={3}
-                      value={note}
-                      onChange={(e) => setNote(e.target.value)}
-                      placeholder="Write a personal note about this movie..."
-                      className="w-full rounded-xl border border-gray-700 bg-gray-800 px-3 py-2
-                                 text-sm text-white placeholder-gray-500
-                                 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => {
-                          updateEntry({ note: note || null });
-                          setEditingNote(false);
-                        }}
-                        className="rounded-xl bg-indigo-600 px-4 py-1.5 text-sm text-white
-                                   hover:bg-indigo-700 transition-colors"
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={() => setEditingNote(false)}
-                        className="rounded-xl border border-gray-700 px-4 py-1.5 text-sm
-                                   text-gray-400 hover:bg-gray-800 transition-colors"
-                      >
-                        Cancel
-                      </button>
-                      {entry.note && (
-                        <button
-                          onClick={() => {
-                            updateEntry({ note: null });
-                            setNote("");
-                            setEditingNote(false);
-                          }}
-                          className="rounded-xl border border-red-800 px-4 py-1.5 text-sm
-                                     text-red-400 hover:bg-red-900/30 transition-colors"
-                        >
-                          Remove note
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-start justify-between gap-4">
-                    <p className="flex-1 text-sm text-gray-400 italic">
-                      {entry.note ? `"${entry.note}"` : "No note yet."}
-                    </p>
-                    <button
-                      onClick={() => setEditingNote(true)}
-                      className="shrink-0 text-xs text-indigo-400 hover:underline"
-                    >
-                      {entry.note ? "Edit note" : "Add note"}
-                    </button>
-                  </div>
-                )}
               </div>
             </>
           )}
@@ -299,6 +240,7 @@ export default function MoviePage() {
             </p>
           )}
         </div>
+        <CommentSection imdbId={imdbId} />
       </div>
     </main>
   );

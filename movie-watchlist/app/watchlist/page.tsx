@@ -123,11 +123,6 @@ export default function WatchlistPage() {
                 </Link>
                 <p className="text-xs text-gray-500">{e.release_year}</p>
                 <StarRating value={e.rating ?? 0} readonly />
-                {e.note && (
-                  <p className="text-xs text-gray-400 italic line-clamp-2">
-                    "{e.note}"
-                  </p>
-                )}
                 <div className="mt-auto flex items-center justify-between">
                   <span className="text-xs text-gray-500 capitalize">
                     {e.status.replace(/_/g, " ")}

@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { OMDbSearchResult } from "@/lib/types";
 import MovieCard from "./Components/MovieCard";
 import SearchBar from "./Components/SearchBar";
@@ -45,7 +46,7 @@ export default function HomePage() {
                           flex items-center justify-between"
       >
         <div>
-          <h1 className="text-2xl font-bold text-white">🎬 Movie Watchlist</h1>
+          <h1 className="text-2xl font-bold text-white">🎬 OMDBS</h1>
           <p className="text-sm text-gray-400">
             Welcome back, {session?.user?.name?.split(" ")[0]} 👋
           </p>
@@ -57,13 +58,13 @@ export default function HomePage() {
           >
             My Watchlist
           </a>
-          <a
-            href="/api/auth/signout"
+          <button
+            onClick={() => signOut({ callbackUrl: "/login" })}
             className="rounded-xl border border-gray-700 px-4 py-2 text-sm
-                       text-gray-400 hover:bg-gray-800 transition-colors"
+                      text-gray-400 hover:bg-gray-800 transition-colors"
           >
             Sign Out
-          </a>
+          </button>
         </nav>
       </header>
 
